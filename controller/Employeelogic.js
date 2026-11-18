@@ -87,9 +87,12 @@ const CreateEmployee = async (req, res) => {
 
 
 // GENERATE IMAGE URL
+
 const GetEmployeeImage = async (req, res) => {
 
     try {
+
+        console.log("Employee ID:", req.params.id);
 
         const employee = await EmployeeModel.findById(req.params.id);
 
@@ -99,22 +102,11 @@ const GetEmployeeImage = async (req, res) => {
             });
         }
 
-        const command = new GetObjectCommand({
-
-            Bucket: process.env.AWS_BUCKET_NAME,
-
-            Key: employee.employeeImage
-
-        });
-
-        const imageUrl = await getSignedUrl(s3, command, {
-            expiresIn: 3600
-        });
+        const imageUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.ap-south-1.amazonaws.com/${employee.employeeImage}`;
 
         res.status(200).json({
-
+            message: "Employee Image Fetched Successfully",
             imageUrl
-
         });
 
     }
@@ -124,16 +116,14 @@ const GetEmployeeImage = async (req, res) => {
         console.log(error);
 
         res.status(500).json({
-
             message: "Image URL Generation Failed",
-
             error: error.message
-
         });
 
     }
 
 };
+
 
 
 module.exports = {
