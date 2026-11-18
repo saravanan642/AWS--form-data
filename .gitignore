@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# AWS credentials
+*.pem
+*.key
+credentials
+.aws/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+# Build files
+dist/
+build/
+
+# Temporary files
+temp/
+tmp/
