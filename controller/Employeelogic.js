@@ -19,9 +19,13 @@ const CreateEmployee = async (req, res) => {
 
     try {
 
+        console.log("1. API Called");
+
         const { employeeName, employeeEmail } = req.body;
 
         const file = req.file;
+
+        console.log("2. Employee Details Received");
 
         if (!employeeName || !employeeEmail) {
             return res.status(400).json({
@@ -35,21 +39,24 @@ const CreateEmployee = async (req, res) => {
             });
         }
 
+        console.log("3. Image Received");
+
         const imageKey = `employees/${randomUUID()}-${file.originalname}`;
 
         const command = new PutObjectCommand({
 
             Bucket: process.env.AWS_BUCKET_NAME,
-
             Key: imageKey,
-
             Body: file.buffer,
-
             ContentType: file.mimetype
 
         });
 
+        console.log("4. Uploading Image To S3");
+
         await s3.send(command);
+
+        console.log("5. Image Uploaded Successfully");
 
         const employee = await EmployeeModel.create({
 
@@ -59,10 +66,11 @@ const CreateEmployee = async (req, res) => {
 
         });
 
+        console.log("6. Employee Saved In DB");
+
         res.status(201).json({
 
             message: "Employee Created Successfully",
-
             employee
 
         });
@@ -71,12 +79,11 @@ const CreateEmployee = async (req, res) => {
 
     catch (error) {
 
-        console.log(error);
+        console.log("ERROR:", error);
 
         res.status(500).json({
 
             message: "Employee Creation Failed",
-
             error: error.message
 
         });
@@ -84,7 +91,6 @@ const CreateEmployee = async (req, res) => {
     }
 
 };
-
 
 // GENERATE IMAGE URL
 
